@@ -62,11 +62,16 @@ public abstract class BaseDataBoundRecyclerAdapter<T extends ViewDataBinding> ex
 			if (mRecyclerView == null || mRecyclerView.isComputingLayout()) {
 				return true;
 			}
-			int childAdapterPosition = mRecyclerView.getChildAdapterPosition(binding.getRoot());
+			final int childAdapterPosition = mRecyclerView.getChildAdapterPosition(binding.getRoot());
 			if (childAdapterPosition == RecyclerView.NO_POSITION) {
 				return true;
 			}
-			notifyItemChanged(childAdapterPosition, DB_PAYLOAD);
+			mRecyclerView.post(new Runnable() {
+				@Override
+				public void run() {
+					notifyItemChanged(childAdapterPosition, DB_PAYLOAD);
+				}
+			});
 			return false;
 		}
 	};
